@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: zeeshan-twin
+    runtime: python
+    plan: free
+    buildCommand: "true"
+    startCommand: python3 server.py
+    healthCheckPath: /healthz
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ACCESS_CODE
+        sync: false
+      - key: MODEL
+        value: claude-sonnet-5-5
