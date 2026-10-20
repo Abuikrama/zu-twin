@@ -9,6 +9,7 @@ Config comes from environment variables or a .env file next to this script:
 """
 import json
 import os
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -17,6 +18,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+sys.stdout.reconfigure(line_buffering=True)  # so hosted logs show up immediately
 
 
 def load_dotenv():
@@ -158,7 +160,7 @@ class Handler(BaseHTTPRequestHandler):
             except Exception:
                 msg = ""
             print("upstream error", e.code, msg)
-            return self.send_json(502, {"error": "The AI service returned an error (%s)." % e.code})
+            return self.send_json(502, {"error": "The AI service returned an error (%s): %s" % (e.code, msg)})
         except urllib.error.URLError as e:
             return self.send_json(502, {"error": "Couldn't reach the AI service: %s" % e.reason})
 
